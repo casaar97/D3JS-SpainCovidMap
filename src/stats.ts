@@ -72,82 +72,98 @@ export const initialStats: ResultEntry[] = [
     name: "Navarra",
     value: 20,
   },
+  {
+    name: "Ceuta",
+    value: 5,
+  },
+  {
+    name: "Melilla",
+    value: 25,
+  },
 ];
 
 /*
 Data taken from 
 https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-autonomas-abril-9_1_1039633.html
 "casos notificados en el dia"
-10/04/2021
+14/04/2021
 */
 
 export const todayStats: ResultEntry[] = [
   {
     name: "Madrid",
-    value: 640656,
+    value: 646763,
   },
   {
     name: "La Rioja",
-    value: 28304,
+    value: 28525,
   },
   {
     name: "Andalucía",
-    value: 518285,
+    value: 523865,
   },
   {
     name: "Cataluña",
-    value: 547239,
+    value: 553393,
   },
   {
     name: "Valencia",
-    value: 387107,
+    value: 387611,
   },
   {
     name: "Murcia",
-    value: 109243,
+    value: 109529,
   },
   {
     name: "Extremadura",
-    value: 72055,
+    value: 72442,
   },
   {
     name: "Castilla La Mancha",
-    value: 178092,
+    value: 179346,
   },
   {
     name: "País Vasco",
-    value: 168334,
+    value: 171232,
   },
   {
     name: "Cantabria",
-    value: 26653,
+    value: 26990,
   },
   {
     name: "Asturias",
-    value: 48329,
+    value: 48771,
   },
   {
     name: "Galicia",
-    value: 117841,
+    value: 118559,
   },
   {
     name: "Aragón",
-    value: 112848,
+    value: 113630,
   },
   {
     name: "Castilla y León",
-    value: 215845,
+    value: 217129,
   },
   {
     name: "Islas Canarias",
-    value: 48788,
+    value: 49630,
   },
   {
     name: "Islas Baleares",
-    value: 58153,
+    value: 58380,
   },
   {
     name: "Navarra",
     value: 56959,
+  },
+  {
+    name: "Ceuta",
+    value: 5515,
+  },
+  {
+    name: "Melilla",
+    value: 8279,
   },
 ];
