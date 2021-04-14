@@ -30,6 +30,30 @@ svg
   // data loaded from json file
   .attr("d", geoPath as any);
 
+const calculateMaxAffected = (dataset: ResultEntry[]) => {
+  return dataset.reduce(
+    (max, item) => (item.value > max ? item.value : max),
+    0
+  );
+};
+
+const calculateAffectedRadiusScale = (maxAffected: number) => {
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
+};
+
+const calculateRadiusBasedOnAffectedCases = (
+  comunidad: string,
+  dataset: ResultEntry[]
+) => {
+  const maxAffected = calculateMaxAffected(dataset);
+
+  const affectedRadiusScale = calculateAffectedRadiusScale(maxAffected);
+
+  const entry = dataset.find((item) => item.name === comunidad);
+
+  return entry ? affectedRadiusScale(entry.value) : 0;
+};
+
 const updateChart = (dataset: ResultEntry[]) => {
   svg.selectAll("circle").remove();
 
@@ -55,27 +79,3 @@ document
   .addEventListener("click", function handleTodayStats() {
     updateChart(todayStats);
   });
-
-const calculateMaxAffected = (dataset: ResultEntry[]) => {
-  return dataset.reduce(
-    (max, item) => (item.value > max ? item.value : max),
-    0
-  );
-};
-
-const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
-};
-
-const calculateRadiusBasedOnAffectedCases = (
-  comunidad: string,
-  dataset: ResultEntry[]
-) => {
-  const maxAffected = calculateMaxAffected(dataset);
-
-  const affectedRadiusScale = calculateAffectedRadiusScale(maxAffected);
-
-  const entry = dataset.find((item) => item.name === comunidad);
-
-  return entry ? affectedRadiusScale(entry.value) : 0;
-};
