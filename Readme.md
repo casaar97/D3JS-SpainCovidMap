@@ -2,8 +2,6 @@
 
 ![animated map](./content/animatedMap.gif "Animated Map")
 
-This time, we will add a new feature to the version 1.0 of the Map: https://github.com/casaar97/D3JS-SpainCovidMap-V1
-
 We have to face four challenges here:
 
 - Place pins on a map based on location.
