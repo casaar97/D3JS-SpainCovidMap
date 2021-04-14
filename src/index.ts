@@ -51,7 +51,7 @@ const calculateRadiusBasedOnAffectedCases = (
 
   const entry = dataset.find((item) => item.name === comunidad);
 
-  return entry ? affectedRadiusScale(entry.value) : 0;
+  return entry ? affectedRadiusScale(entry.value) + 5 : 0;
 };
 
 const updateChart = (dataset: ResultEntry[]) => {

@@ -458,7 +458,7 @@ const calculateRadiusBasedOnAffectedCases = (
 
   const entry = dataset.find((item) => item.name === comunidad);
 
-  return entry ? affectedRadiusScale(entry.value) : 0;
+  return entry ? affectedRadiusScale(entry.value) + 5 : 0;
 };
 ```
 
@@ -497,13 +497,3 @@ document
     updateChart(todayStats);
   });
 ```
-
-# About Basefactor + Lemoncode
-
-We are an innovating team of Javascript experts, passionate about turning your ideas into robust products.
-
-[Basefactor, consultancy by Lemoncode](http://www.basefactor.com) provides consultancy and coaching services.
-
-[Lemoncode](http://lemoncode.net/services/en/#en-home) provides training services.
-
-For the LATAM/Spanish audience we are running an Online Front End Master degree, more info: http://lemoncode.net/master-frontend
