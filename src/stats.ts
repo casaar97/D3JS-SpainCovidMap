@@ -89,7 +89,7 @@ https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-auton
 14/04/2021
 */
 
-export const todayStats: ResultEntry[] = [
+export const finalStats: ResultEntry[] = [
   {
     name: "Madrid",
     value: 646763,

@@ -64,7 +64,7 @@ Once we have everything we needed installed, let´s create the required files in
   <body>
     <div>
       <button id="initial">Show initial stats</button>
-      <button id="today">Show today stats</button>
+      <button id="final">Show final stats</button>
     </div>
     <script src="./index.ts"></script>
   </body>
@@ -269,7 +269,7 @@ https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-auton
 14/04/2021
 */
 
-export const todayStats: ResultEntry[] = [
+export const finalStats: ResultEntry[] = [
   {
     name: "Madrid",
     value: 646763,
@@ -385,7 +385,7 @@ import * as topojson from "topojson-client";
 const spainjson = require("./spain.json");
 const d3Composite = require("d3-composite-projections");
 import { latLongCommunities } from "./communities";
-import { initialStats, todayStats, ResultEntry } from "./stats";
+import { initialStats, finalStats, ResultEntry } from "./stats";
 ```
 
 - Let's build the Spain map::
@@ -492,8 +492,8 @@ document
   });
 
 document
-  .getElementById("today")
-  .addEventListener("click", function handleTodayStats() {
-    updateChart(todayStats);
+  .getElementById("final")
+  .addEventListener("click", function handleFinalStats() {
+    updateChart(finalStats);
   });
 ```

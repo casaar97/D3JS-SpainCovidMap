@@ -3,7 +3,7 @@ import * as topojson from "topojson-client";
 const spainjson = require("./spain.json");
 const d3Composite = require("d3-composite-projections");
 import { latLongCommunities } from "./communities";
-import { initialStats, todayStats, ResultEntry } from "./stats";
+import { initialStats, finalStats, ResultEntry } from "./stats";
 
 const aProjection = d3Composite
   .geoConicConformalSpain() // Let's make the map bigger to fit in our resolution
@@ -75,7 +75,7 @@ document
   });
 
 document
-  .getElementById("today")
-  .addEventListener("click", function handleTodayStats() {
-    updateChart(todayStats);
+  .getElementById("final")
+  .addEventListener("click", function handleFinalStats() {
+    updateChart(finalStats);
   });
