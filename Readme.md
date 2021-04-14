@@ -1,79 +1,37 @@
 # Map of COVID cases in Spain (version 1.0)
 
-Our boss liked a lot the map we have developed, now he wants to focus on Spain affection by City, he wants to
-display a map pinning affected locations and scaling that pin according the number of cases affected, something like:
+This time, we will add a new feature to the version 1.0 of the Map: https://github.com/casaar97/D3JS-SpainCovidMap-V1
 
-
-
-We have to face three challenges here:
+We have to face four challenges here:
 
 - Place pins on a map based on location.
 - Scale pin radius based on affected number.
-- Spain got canary island that is a territory placed far away, we need to cropt that islands and paste them in a visible
-  place in the map.
+- Spain got canary island that is a territory placed far away, we need to cropt that islands and paste them in a visible place in the map.
+- Change between two datasets and update the chart with the new data.
 
 # Steps
 
-The first thing we need to do is to install npm.
+The first thing you have to do is to create a project folder containing the following files and directories:
+
+- src/ (directory)
+- package.json (npm configuration file)
+- tsconfig.json (typescript configuration file)
+
+The second thing we need to do is to install npm and the following modules:
 
 ```bash
 npm install
 ```
 
-- This time we will Spain topojson info: https://github.com/deldersveld/topojson/blob/master/countries/spain/spain-comunidad-with-canary-islands.json
+When you deal with maps you can use two map formats GeoJSON or TopoJSON, topoJSON is lightweight and offers some extra features, let's install the needed package to work with:
 
-Let's copy it under the following route _./src/spain.json_
-
-- Now we will import _spain.json_.
-
-_./src/index.ts_
-
-```diff
-import * as d3 from "d3";
-import * as topojson from "topojson-client";
-const spainjson = require("./spain.json");
+```bash
+npm install topojson-client --save
 ```
 
-- Let's build the spain map:
-
-_./src/index.ts_
-
-```diff
-const geojson = topojson.feature(
-  spainjson,
-  spainjson.objects.ESP_adm1
-);
+```bash
+npm install @types/topojson-client --save-dev
 ```
-
-> How do we know that we have to use _spainjson.objects.ESP_adm1_ just by examining
-> the _spain.json_ file and by debugging and inspecting what's inside _spainjson_ object?
-
-- If we run the project, we will get some bitter-sweet feelings, we can see a map of spain,
-  but it's too smal, and on the other hand, canary islands are shown far away (that's normal,
-  but usually in maps these islands are relocated).
-
-- Let's start by adding the right size to be displayed in our screen.
-
-_./src/index.ts_
-
-```diff
-const aProjection = d3
-  .geoMercator()
-  // Let's make the map bigger to fit in our resolution
-  .scale(2000)
-  // Let's center the map
-  .translate([650, 1800]);
-```
-
-- If we run the project we can check that the map is now renders in a proper size and position, let's
-  go for the next challenge, we want to reposition Canary Islands, in order to do that we can build a
-  map projection that positions that piece of land in another place, for instance for the USA you can
-  find Albers USA projection: https://bl.ocks.org/mbostock/2869946, there's a great project created by
-  [Roger Veciana](https://github.com/rveciana) that implements a lot of projections for several
-  maps:
-
-  - [Project site](https://geoexamples.com/d3-composite-projections/)
-  - [Github project](https://github.com/rveciana/d3-composite-projections)
 
 Let's install the library that contains this projections:
 
@@ -81,37 +39,21 @@ Let's install the library that contains this projections:
 npm install d3-composite-projections --save
 ```
 
-- Let's import it in our _index.ts_ (we will use require since we don't have typings).
+Let's install the node typings to get require typing:
 
-```diff
-import * as d3 from "d3";
-import * as topojson from "topojson-client";
-const spainjson = require("./spain.json");
-const d3Composite = require("d3-composite-projections");
+```bash
+npm install @types/node --save-dev
 ```
 
-- Let's set the projection :
+Once we have everything we needed installed, let´s create the required files in the src/ directory:
 
-_./src/index.ts_
+- src/index.ts: Business logic.
+- src/communities.ts: Contains information about the latitude and longitude of each community of Spain.
+- src/stats.ts: Contains information about COVID-19 cases per community.
+- src/index.html: HTML code of the project.
+- src/map.css: CSS code of the project.
 
-```diff
-const aProjection =
-
-  d3Composite
-  .geoConicConformalSpain()
-  // Let's make the map big to fit in our resolution
-  .scale(3300)
-  // Let's center the map
-  .translate([500, 400]);
-```
-
-- If we run the project, voila ! we got the map just the way we want it.
-
-- Now we want to display a circle in the middle of each community (comunidad autónoma),
-  we have collected the latitude and longitude for each community, let's add them to our
-  project.
-
-_./src/communities.ts_
+### src/communities.ts:
 
 ```typescript
 export const latLongCommunities = [
@@ -203,38 +145,7 @@ export const latLongCommunities = [
 ];
 ```
 
-- Let's import it:
-
-_./src/index.ts_
-
-```diff
-import * as d3 from "d3";
-import * as topojson from "topojson-client";
-import { latLongCommunities } from "./communities";
-```
-
-- And let's append at the bottom of the _index_ file a
-  code to render a circle on top of each community:
-
-_./src/index.ts_
-
-```typescript
-svg
-  .selectAll("circle")
-  .data(latLongCommunities)
-  .enter()
-  .append("circle")
-  .attr("r", 15)
-  .attr("cx", (d) => aProjection([d.long, d.lat])[0])
-  .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
-```
-
-- Nice ! we got an spot on top of each community, now is time to
-  make this spot size relative to the number of affected cases per community.
-
-- We will add the stats that we need to display (affected persons per community). As we wan to use two different stats (one for the initial stats of Spain and other one for today's stats in Spain) we will create two variables (initialStats and todayStats):
-
-_./stats.ts_
+### src/stats.ts:
 
 ```typescript
 export interface ResultEntry {
@@ -306,6 +217,10 @@ export const initialStats: ResultEntry[] = [
   {
     name: "Islas Baleares",
     value: 6,
+  },
+  {
+    name: "Navarra",
+    value: 20,
   },
 ];
 
@@ -381,10 +296,40 @@ export const todayStats: ResultEntry[] = [
     name: "Islas Baleares",
     value: 58153,
   },
+  {
+    name: "Navarra",
+    value: 56959,
+  },
 ];
 ```
 
-- Let's import it into our index.ts
+### src/map.css:
+
+We will create two classes:
+
+- country: Class for the country color and community lines.
+- affected-marker: Class for the orange circles.
+
+```typescript
+.country {
+  stroke-width: 1;
+  stroke: #2f4858;
+  fill: #008c86;
+}
+
+.affected-marker {
+  stroke-width: 1;
+  stroke: #bc5b40;
+  fill: #f88f70;
+  fill-opacity: 0.7;
+}
+```
+
+We will use Spain topojson info: https://github.com/deldersveld/topojson/blob/master/countries/spain/spain-comunidad-with-canary-islands.json
+
+Let's copy it under the following route _./src/spain.json_
+
+- Now we will import all the required dependencies into _index.ts_:
 
 _./src/index.ts_
 
@@ -397,9 +342,45 @@ import { latLongCommunities } from "./communities";
 import { initialStats, todayStats, ResultEntry } from "./stats";
 ```
 
-- Let's create a function to calculate the maximum number of affected of all communities when a stat variable is given:
+- Let's build the Spain map::
 
 _./src/index.ts_
+
+```typescript
+const aProjection = d3Composite
+  .geoConicConformalSpain() // Let's make the map bigger to fit in our resolution
+  .scale(3300)
+  // Let's center the map
+  .translate([500, 400]);
+
+const geoPath = d3.geoPath().projection(aProjection);
+const geojson = topojson.feature(spainjson, spainjson.objects.ESP_adm1);
+);
+```
+
+Now let's create the map:
+
+```typescript
+const svg = d3
+  .select("body")
+  .append("svg")
+  .attr("width", 1024)
+  .attr("height", 800)
+  .attr("style", "background-color: #FBFAF0");
+
+svg
+  .selectAll("path")
+  .data(geojson["features"])
+  .enter()
+  .append("path")
+  .attr("class", "country")
+  // data loaded from json file
+  .attr("d", geoPath as any);
+```
+
+At this point, the map has been created. Now we will create some functions in order to make everything work as we desire:
+
+### Get the number of cases of the most affected community:
 
 ```typescript
 const calculateMaxAffected = (dataset: ResultEntry[]) => {
@@ -410,9 +391,7 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
 };
 ```
 
-- Let's create another function to scale to the map the affected number to radius size.
-
-_./src/index.ts_
+### Create a radius scale for the radius of each community circunference depending on the number of cases of the most affected community:
 
 ```typescript
 const calculateAffectedRadiusScale = (maxAffected: number) => {
@@ -420,9 +399,7 @@ const calculateAffectedRadiusScale = (maxAffected: number) => {
 };
 ```
 
-- Let's create a helper function to glue the community name with the affected cases.
-
-_./src/index.ts_
+### Scale the radius of each circunference depending on the number of cases:
 
 ```typescript
 const calculateRadiusBasedOnAffectedCases = (
@@ -439,29 +416,9 @@ const calculateRadiusBasedOnAffectedCases = (
 };
 ```
 
-- Now we will create two buttons in the _index.html_ file. One will be used to display the initial stats into the map and the other one will display the stats of the current date at the time (10/04/2021):
+### Update chart when buttons are clicked
 
-_./src/index.html_
-
-```diff
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="./map.css" />
-    <link rel="stylesheet" type="text/css" href="./base.css" />
-  </head>
-  <body>
-    <div>
-      <button id="initial">Show initial stats</button>
-      <button id="today">Show today stats</button>
-    </div>
-    <script src="./index.ts"></script>
-  </body>
-</html>
-```
-
-- Once that we have created the buttons, let's create a function in order to change the map when we click them:
-
-_./src/index.ts_
+We now that we have to pass d.properties.NAME_1 as a parameter for assignColorToCommunity function because when we inspect spain.json, we can see that the property NAME_1 refers to the community name.
 
 ```typescript
 const updateChart = (dataset: ResultEntry[]) => {
@@ -472,60 +429,27 @@ const updateChart = (dataset: ResultEntry[]) => {
     .data(latLongCommunities)
     .enter()
     .append("circle")
+    .attr("class", "affected-marker")
     .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
     .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
 };
 ```
 
-- If we run the example we can check that know circles are shonw in the right size.
+### Add button logic
 
-- Black circles are ugly let's add some styles, we will just use a red background and
-  add some transparency to let the user see the spot and the map under that spot.
+```typescript
+document
+  .getElementById("initial")
+  .addEventListener("click", function handleInitialStats() {
+    updateChart(initialStats);
+  });
 
-_./src/map.css_
-
-```diff
-.country {
-  stroke-width: 1;
-  stroke: #2f4858;
-  fill: #008c86;
-}
-
-.selected-country {
-  stroke-width: 1;
-  stroke: #bc5b40;
-  fill: #f88f70;
-}
-
-+ .affected-marker {
-+  stroke-width: 1;
-+  stroke: #bc5b40;
-+  fill: #f88f70;
-+  fill-opacity: 0.7;
-+ }
-```
-
-- Let's apply this style to the black circles that we are rendering:
-
-_./src/index.ts_
-
-```diff
-
-const updateChart = (dataset: ResultEntry[]) => {
-  svg.selectAll("circle").remove();
-
-  svg
-    .selectAll("circle")
-    .data(latLongCommunities)
-    .enter()
-    .append("circle")
-+   .attr("class", "affected-marker")
-    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
-    .attr("cx", (d) => aProjection([d.long, d.lat])[0])
-    .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
-};
-
+document
+  .getElementById("today")
+  .addEventListener("click", function handleTodayStats() {
+    updateChart(todayStats);
+  });
 ```
 
 # About Basefactor + Lemoncode
