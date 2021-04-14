@@ -53,6 +53,24 @@ Once we have everything we needed installed, let´s create the required files in
 - src/index.html: HTML code of the project.
 - src/map.css: CSS code of the project.
 
+### src/index.html:
+
+```diff
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./map.css" />
+    <link rel="stylesheet" type="text/css" href="./base.css" />
+  </head>
+  <body>
+    <div>
+      <button id="initial">Show initial stats</button>
+      <button id="today">Show today stats</button>
+    </div>
+    <script src="./index.ts"></script>
+  </body>
+</html>
+```
+
 ### src/communities.ts:
 
 ```typescript
