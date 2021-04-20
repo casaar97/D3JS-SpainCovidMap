@@ -38,7 +38,7 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
 };
 
 const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 40]);
 };
 
 const calculateRadiusBasedOnAffectedCases = (
@@ -63,9 +63,11 @@ const updateChart = (dataset: ResultEntry[]) => {
     .enter()
     .append("circle")
     .attr("class", "affected-marker")
-    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
-    .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .transition()
+    .duration(800)
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset));
 };
 
 document
