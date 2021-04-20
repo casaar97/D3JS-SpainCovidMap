@@ -459,7 +459,7 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
 
 ```typescript
 const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 40]);
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 20]);
 };
 ```
 
