@@ -9,9 +9,11 @@ We have to face four challenges here:
 - Spain got canary island that is a territory placed far away, we need to cropt that islands and paste them in a visible place in the map.
 - Change between two datasets and update the chart with the new data.
 
-# Data
+# Objective
 
 We will compare the situation of COVID cases in the different communities of Spain. In order to do this, we will compare the total accumulated cases of each community, taking as a reference the community with most cases.
+
+# Data
 
 The data has been extracted from this source: https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-autonomas-abril-19_1_1039633.html
 
