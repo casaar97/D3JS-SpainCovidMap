@@ -55,13 +55,11 @@ const calculateRadiusBasedOnAffectedCases = (
 };
 
 const updateChart = (dataset: ResultEntry[]) => {
-  svg.selectAll("circle").remove();
 
   svg
     .selectAll("circle")
     .data(latLongCommunities)
-    .enter()
-    .append("circle")
+    
     .attr("class", "affected-marker")
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
     .attr("cy", (d) => aProjection([d.long, d.lat])[1])
@@ -81,3 +79,15 @@ document
   .addEventListener("click", function handleFinalStats() {
     updateChart(finalStats);
   });
+
+  svg
+    .selectAll("circle")
+    .data(latLongCommunities)
+    .enter()
+    .append("circle")
+    .attr("class", "affected-marker")
+    .attr("cx", (d) => aProjection([d.long, d.lat])[0])
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .transition()
+    .duration(500)
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, initialStats));
