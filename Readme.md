@@ -9,6 +9,22 @@ We have to face four challenges here:
 - Spain got canary island that is a territory placed far away, we need to cropt that islands and paste them in a visible place in the map.
 - Change between two datasets and update the chart with the new data.
 
+# Data
+
+We will compare the situation of COVID cases in the different communities of Spain. In order to do this, we will compare the total accumulated cases of each community, taking as a reference the community with most cases.
+
+The data has been extracted from this source: https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-autonomas-abril-19_1_1039633.html
+
+# Try the project
+
+If you want to try the project, you just have to type the following into the terminal:
+
+```bash
+npm start
+```
+
+- Note that the steps below must be completed or the repository must be cloned before.
+
 # Steps
 
 The first thing you have to do is to create a project folder containing the following files and directories:
@@ -441,7 +457,7 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
 
 ```typescript
 const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 40]);
 };
 ```
 
@@ -468,17 +484,15 @@ We now that we have to pass d.properties.NAME_1 as a parameter for assignColorTo
 
 ```typescript
 const updateChart = (dataset: ResultEntry[]) => {
-  svg.selectAll("circle").remove();
-
   svg
     .selectAll("circle")
     .data(latLongCommunities)
-    .enter()
-    .append("circle")
     .attr("class", "affected-marker")
-    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
-    .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .transition()
+    .duration(800)
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset));
 };
 ```
 
@@ -496,4 +510,20 @@ document
   .addEventListener("click", function handleFinalStats() {
     updateChart(finalStats);
   });
+```
+
+### Add initial stats to the map by default
+
+```typescript
+svg
+    .selectAll("circle")
+    .data(latLongCommunities)
+    .enter()
+    .append("circle")
+    .attr("class", "affected-marker")
+    .attr("cx", (d) => aProjection([d.long, d.lat])[0])
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .transition()
+    .duration(500)
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, initialStats));
 ```

@@ -54,12 +54,10 @@ const calculateRadiusBasedOnAffectedCases = (
   return entry ? affectedRadiusScale(entry.value) + 5 : 0;
 };
 
-const updateChart = (dataset: ResultEntry[]) => {
-
+const updateChart = (dataset: ResultEntry[]) => { 
   svg
     .selectAll("circle")
     .data(latLongCommunities)
-    
     .attr("class", "affected-marker")
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
     .attr("cy", (d) => aProjection([d.long, d.lat])[1])
