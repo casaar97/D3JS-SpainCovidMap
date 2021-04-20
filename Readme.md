@@ -523,7 +523,5 @@ svg
     .attr("class", "affected-marker")
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
     .attr("cy", (d) => aProjection([d.long, d.lat])[1])
-    .transition()
-    .duration(500)
     .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, initialStats));
 ```
